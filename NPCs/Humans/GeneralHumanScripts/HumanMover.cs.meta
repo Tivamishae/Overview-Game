@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e9e2cf5cb37974549b635476257bd688
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - player: {instanceID: 0}
+  - angerEffectPrefab: {fileID: 3780746134834037720, guid: 30dde1013eb9f854fb055721a75b4e52, type: 3}
+  - agent: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

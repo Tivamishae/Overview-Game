@@ -1,53 +1,53 @@
 using UnityEngine;
 
-public class Townsman : InteractableNPC
+public class Townsman : Villager
 {
+    [Header("Work")]
     public NPCWorkArea Work;
 
-    void LateUpdate()
+    protected override void Update()
     {
-        if (isDead) return;
+        base.Update();
 
-        if (angry)
-        {
-            ChasePlayer();
+        if (currentState == NPCState.Dead)
             return;
-        }
 
+        if (currentState == NPCState.Angry)
+            return;
+
+        HandleWorkBehavior();
+    }
+
+    private void HandleWorkBehavior()
+    {
         if (Work == null)
         {
-            canWander = true;
+            if (idleReaction != null)
+                idleReaction.ExecuteIdle(this);
             return;
         }
 
         Vector3 targetPos = Work.GetStandingPosition();
         float distance = Vector3.Distance(transform.position, targetPos);
-        canWander = false;
 
         if (distance > 1f)
         {
-            agent.SetDestination(Work.finalGroundPosition);
-            humanMover.SetIsMoving(true);
-            humanMover.SetIsWorking(false);
+            MoveTowards(Work.finalGroundPosition);
+            PlayTrigger("Walking");
+            animator.SetBool("Working", false);
         }
         else
         {
-            FaceWorkBench();
-            humanMover.SetIsMoving(false);
-            humanMover.SetIsWorking(true);
-        }
-    }
-
-    private void FaceWorkBench()
-    {
-        if (Work != null)
-        {
             FaceTarget(Work.transform.position);
+            StopMoving();
+            PlayTrigger("Working");
+            animator.SetBool("Working", true);
         }
     }
 
-    public override void ChasePlayer()
+    public override void ResetEnemy()
     {
-        RunFromPlayer();
+        base.ResetEnemy();
+        Work = null;
     }
 }

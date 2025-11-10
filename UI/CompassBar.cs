@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 public class CompassBar : MonoBehaviour
 {
@@ -20,7 +20,7 @@ public class CompassBar : MonoBehaviour
 
         compassContainer.gameObject.SetActive(true);
 
-        // Player forward vector (flipped 180° for correct compass rotation)
+        // Player forward vector (flipped 180ï¿½ for correct compass rotation)
         Vector3 forwardVector = Vector3.ProjectOnPlane(viewDirection.forward, Vector3.up).normalized;
         float forwardSignedAngle = Vector3.SignedAngle(Vector3.forward, forwardVector, Vector3.up) + 180f;
         forwardSignedAngle = Mathf.Repeat(forwardSignedAngle + 180f, 360f) - 180f;
@@ -157,3 +157,4 @@ public class CompassBar : MonoBehaviour
         }
     }
 }
+*/

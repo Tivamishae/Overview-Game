@@ -76,7 +76,7 @@ public class MobPoolManager : MonoBehaviour
         if (poolDict[prefab].Count > 0)
         {
             GameObject obj = poolDict[prefab].Dequeue();
-            obj.GetComponent<Enemy>().SetIdleState();
+            obj.GetComponent<NPC>().SetIdleState();
             obj.SetActive(true);
             return obj;
         }

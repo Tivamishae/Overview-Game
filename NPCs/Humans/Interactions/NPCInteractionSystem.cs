@@ -6,15 +6,14 @@ public class NPCInteractionSystem : MonoBehaviour
 
     [Header("UI References")]
     public GameObject npcQuoteDisplay;
-    // Future: public GameObject skillPointDisplay;
     public GameObject npcTradingDisplay;
 
     [Header("Settings")]
     public float interactionMaxDistance = 5f;
 
-    public InteractableNPC currentNPC;
+    public Villager currentNPC;
     private Transform playerTransform;
-    public event System.Action<InteractableNPC> OnNPCInteracted;
+    public event System.Action<Villager> OnNPCInteracted;
 
     [Header("Interaction Lock Settings")]
     private float interactionCooldown = 0.3f;
@@ -70,7 +69,7 @@ public class NPCInteractionSystem : MonoBehaviour
         }
     }
 
-    public void StartInteraction(InteractableNPC npc)
+    public void StartInteraction(Villager npc)
     {
         if (interactionLocked || npc == null || npc == currentNPC)
             return;
@@ -92,9 +91,6 @@ public class NPCInteractionSystem : MonoBehaviour
 
         npc.Interact();
     }
-
-
-
 
     public void EndInteraction()
     {

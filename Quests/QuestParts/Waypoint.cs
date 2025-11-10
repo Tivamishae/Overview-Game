@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 public class Waypoint : QuestPart
 {
@@ -62,7 +62,7 @@ public class Waypoint : QuestPart
             return;
         }
 
-        // Ensure the waypoint exists if we’re current quest
+        // Ensure the waypoint exists if weï¿½re current quest
         if (spawnedWaypoint == null && waypointPrefab != null)
         {
             SpawnWaypoint();
@@ -116,3 +116,4 @@ public class Waypoint : QuestPart
         RemoveWaypoint();
     }
 }
+*/

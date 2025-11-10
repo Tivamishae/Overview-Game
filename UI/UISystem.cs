@@ -70,7 +70,6 @@ public class UISystem : MonoBehaviour
 
             ApplyCursorAndPointerState();
         }
-
         // Quest screen toggle (Q)
         if (Input.GetKeyDown(KeyCode.Q) && QuestScreen != null)
         {

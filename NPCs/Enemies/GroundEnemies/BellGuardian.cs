@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BellGuardian : Enemy
+public class BellGuardian : NPC
 {
     [Header("Audio")]
     private AudioClip chargeGruntClip;

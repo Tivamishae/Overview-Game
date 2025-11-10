@@ -86,7 +86,7 @@ public class NightEnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            // wait until it’s night
+            // wait until itï¿½s night
             yield return new WaitUntil(() => TimeCycle.Instance != null && !TimeCycle.Instance.isDay);
 
             // Only spawn waves if below cap and not already spawning
@@ -114,10 +114,10 @@ public class NightEnemySpawner : MonoBehaviour
             if (FindValidSpawnPoint(out Vector3 spawnPos))
             {
                 GameObject enemyObj = MobPoolManager.Instance.GetFromPool(chosen.prefab);
-                Enemy enemy = enemyObj.GetComponent<Enemy>();
+                NPC enemy = enemyObj.GetComponent<NPC>();
 
                 enemy.poolPrefabReference = chosen.prefab;
-                enemy.ResetEnemy(); // make sure it’s ready
+                enemy.ResetEnemy(); // make sure itï¿½s ready
 
                 enemyObj.transform.position = spawnPos;
                 enemyObj.transform.rotation = Quaternion.identity;
@@ -217,7 +217,7 @@ public class NightEnemySpawner : MonoBehaviour
 
                         enemy.tooFarTimer = 0f;
 
-                        if (enemy.obj.TryGetComponent(out Enemy e))
+                        if (enemy.obj.TryGetComponent(out NPC e))
                         {
                             e.ResetEnemy(); // ensures correct animation/state reset
                         }

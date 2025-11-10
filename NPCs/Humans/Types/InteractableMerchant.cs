@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 [RequireComponent(typeof(HumanMover))]
 [RequireComponent(typeof(Animator))]
@@ -46,3 +46,4 @@ public class InteractableMerchant : InteractableNPC
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 public class KillBoss : QuestPart
 {
@@ -26,3 +26,4 @@ public class KillBoss : QuestPart
         }
     }
 }
+*/

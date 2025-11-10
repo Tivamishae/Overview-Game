@@ -370,24 +370,8 @@ public class PlayerStats : MonoBehaviour
             if (col == null) continue;
 
             // Check InteractableNPC
-            var npc = col.GetComponent<InteractableNPC>();
+            var npc = col.GetComponent<NPC>();
             if (npc != null && npc.angry)
-            {
-                isInCombat = true;
-                return;
-            }
-
-            // Check CreatureMover
-            var creature = col.GetComponent<CreatureMover>();
-            if (creature != null && creature.angry)
-            {
-                isInCombat = true;
-                return;
-            }
-
-            // Check CreatureMover
-            var enemy = col.GetComponent<Enemy>();
-            if (enemy != null && enemy.angry)
             {
                 isInCombat = true;
                 return;

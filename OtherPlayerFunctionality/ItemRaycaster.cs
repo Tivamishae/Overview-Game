@@ -9,10 +9,7 @@ public class ItemRaycaster : MonoBehaviour
     public float rayDistance = 3f;
 
     public InteractableObject CurrentItem;
-    public InteractableNPC CurrentNPC;
-    public GeneralBossScript CurrentBoss;
-    public CreatureMover CurrentCreature; // <-- ADD THIS at the top
-    public Enemy CurrentEnemy;
+    public NPC currentNPC;
     public ArmMovements armMovement;
 
     void Awake()
@@ -45,21 +42,17 @@ public class ItemRaycaster : MonoBehaviour
                 }
             }
 
-            // --- Handle NPC interaction ---
-            if (CurrentNPC != null)
+            if (currentNPC != null)
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) && currentNPC is Villager villager)
                 {
                     if (!NPCInteractionSystem.Instance.IsInteracting() &&
                         !NPCInteractionSystem.Instance.IsInteractionLocked())
                     {
-                        NPCInteractionSystem.Instance.StartInteraction(CurrentNPC);
+                        NPCInteractionSystem.Instance.StartInteraction(villager);
                     }
                 }
             }
-
-            // --- Handle BOSS interaction (attack only, not E) ---
-            // You can extend this later if needed
         }
         else
         {
@@ -71,110 +64,39 @@ public class ItemRaycaster : MonoBehaviour
     {
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
-
         if (Physics.Raycast(ray, out hit, rayDistance, ~0, QueryTriggerInteraction.Ignore))
         {
-            // --- Check for NPC ---
-            InteractableNPC npc = hit.collider.GetComponent<InteractableNPC>();
+            InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+            if (interactableObject != null)
+            {
+                CurrentItem = interactableObject;
+                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = interactableObject.Name;
+                UISystem.Instance.ObjectName.SetActive(true);
+                return;
+            }
+
+            NPC npc = hit.collider.GetComponent<NPC>();
             if (npc != null)
             {
-                CurrentNPC = npc;
-                CurrentCreature = null;
-                CurrentItem = null;
-                CurrentBoss = null;
-                CurrentEnemy = null;
-                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = "Talk";
-                UISystem.Instance.ObjectName.SetActive(true);
-                return;
-            }
-
-            // --- Check for Boss ---
-            GeneralBossScript boss = hit.collider.GetComponent<GeneralBossScript>();
-            if (boss != null)
-            {
-                CurrentBoss = boss;
-                CurrentCreature = null;
-                CurrentItem = null;
-                CurrentNPC = null;
-                CurrentEnemy = null;
-                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = "Boss";
-                UISystem.Instance.ObjectName.SetActive(true);
-                return;
-            }
-
-            // --- Check for CreatureMover ---
-            CreatureMover creature = hit.collider.GetComponent<CreatureMover>();
-            if (creature != null)
-            {
-                CurrentCreature = creature;
-                CurrentItem = null;
-                CurrentNPC = null;
-                CurrentBoss = null;
-                CurrentEnemy = null;
-                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = creature.Name;
-                UISystem.Instance.ObjectName.SetActive(true);
-                return;
-            }
-
-            // ---  NEW: Check for Enemy ---
-            Enemy enemy = hit.collider.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                CurrentEnemy = enemy;
-                CurrentCreature = null;
-                CurrentItem = null;
-                CurrentNPC = null;
-                CurrentBoss = null;
-                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = enemy.Name;
-                UISystem.Instance.ObjectName.SetActive(true);
-                return;
-            }
-
-            // --- Check for Item ---
-            InteractableObject interactable = hit.collider.GetComponent<InteractableObject>();
-            if (interactable != null)
-            {
-                CurrentItem = interactable;
-                CurrentCreature = null;
-                CurrentNPC = null;
-                CurrentBoss = null;
-                CurrentEnemy = null;
-                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = interactable.Name;
+                currentNPC = npc;
+                UISystem.Instance.ObjectName.GetComponent<TextMeshProUGUI>().text = npc.npcName;
                 UISystem.Instance.ObjectName.SetActive(true);
                 return;
             }
         }
 
         // Nothing hit
+        currentNPC = null;
         CurrentItem = null;
-        CurrentCreature = null;
-        CurrentNPC = null;
-        CurrentBoss = null;
-        CurrentEnemy = null;
         UISystem.Instance.ObjectName.SetActive(false);
     }
 
 
     public void PlayerHitting(float damage)
     {
-        if (CurrentNPC != null)
+        if (currentNPC != null)
         {
-            CurrentNPC.OnPlayerHit(damage);
-        }
-
-        if (CurrentBoss != null)
-        {
-            CurrentBoss.TakeDamage(damage);
-        }
-
-        if (CurrentCreature != null)
-        {
-            CurrentCreature.TakeDamage(damage);
-        }
-
-        if (CurrentEnemy != null)
-        {
-            CurrentEnemy.TakeDamage(damage);
+            currentNPC.takeDamage(damage);
         }
 
         if (CurrentItem != null && CurrentItem is MineableObject)

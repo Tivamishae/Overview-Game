@@ -39,7 +39,7 @@ public class TradingCellScript : MonoBehaviour
             Debug.LogWarning("Cost TextMeshProUGUI not found in TradingCell.");
 
         UpdateAmountDisplay();
-        UpdateCostDisplay(); //  safe to do here — all UI refs are initialized now
+        UpdateCostDisplay(); //  safe to do here ï¿½ all UI refs are initialized now
     }
 
     private void IncreaseAmount()

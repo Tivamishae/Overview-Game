@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 using System.Collections;
 
 public class ObsidianSkitter : Enemy
@@ -193,3 +193,4 @@ public class ObsidianSkitter : Enemy
 
     #endregion
 }
+*/

@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 using System.Collections;
 
 public class TalkToNPC : QuestPart
@@ -47,7 +47,7 @@ public class TalkToNPC : QuestPart
             return;
         }
 
-        //  Respawn marker if it was missing and we’re the current quest
+        //  Respawn marker if it was missing and weï¿½re the current quest
         if (spawnedMarker == null && markerPrefab != null)
         {
             SpawnMarker();
@@ -92,3 +92,4 @@ public class TalkToNPC : QuestPart
         RemoveMarker();
     }
 }
+*/

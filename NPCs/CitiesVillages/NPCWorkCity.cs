@@ -7,11 +7,11 @@ using System.Collections.Generic;
 [RequireComponent(typeof(SphereCollider))]
 public class NPCWorkCity : MonoBehaviour
 {
-    public bool npcReadyToBeWorking = true;
-    public bool npcReadyToBreak = false;
-    public List<Townsman> detectedTownsmen = new();
+    public bool villagerReadyToBeWorking = true;
+    public bool villagerReadyToBreak = false;
+    public List<Townsman> detectedVillagers = new();
     public List<NPCWorkArea> detectedWorkAreas = new();
-    public List<Townsman> wanderingTownsmen = new();
+    public List<Townsman> wanderingVillagers = new();
 
     private SphereCollider cityTrigger;
 
@@ -23,12 +23,12 @@ public class NPCWorkCity : MonoBehaviour
 
     private void Update()
     {
-        if (npcReadyToBeWorking == true)
+        if (villagerReadyToBeWorking == true)
         {
             StartCoroutine(AssignWorkCooldown());
         }
 
-        if (npcReadyToBreak)
+        if (villagerReadyToBreak)
         {
             StartCoroutine(NPCBreak());
         }
@@ -37,27 +37,27 @@ public class NPCWorkCity : MonoBehaviour
 
     private IEnumerator AssignWorkCooldown()
     {
-        foreach (Townsman NPC in detectedTownsmen)
+        foreach (Townsman NPC in detectedVillagers)
         {
             if (NPC.Work == null)
             {
-                wanderingTownsmen.Add(NPC);
+                wanderingVillagers.Add(NPC);
             }
         }
-        npcReadyToBeWorking = false;
+        villagerReadyToBeWorking = false;
 
         yield return null;
 
-        if (wanderingTownsmen.Count > 0) { TryAssignWork(wanderingTownsmen[0]); }
+        if (wanderingVillagers.Count > 0) { TryAssignWork(wanderingVillagers[0]); }
 
         yield return new WaitForSeconds(60f);
 
-        npcReadyToBeWorking = true;
+        villagerReadyToBeWorking = true;
     }
 
     private IEnumerator NPCBreak()
     {
-        foreach (Townsman NPC in detectedTownsmen)
+        foreach (Townsman NPC in detectedVillagers)
         {
             if (NPC.Work != null)
             {
@@ -66,11 +66,11 @@ public class NPCWorkCity : MonoBehaviour
                 {
                     NPC.Work.hasAWorker = false;
                     NPC.Work = null;
-                    wanderingTownsmen.Add(NPC);
+                    wanderingVillagers.Add(NPC);
                 }
             }
         }
-        npcReadyToBreak = false;
+        villagerReadyToBreak = false;
 
         yield return new WaitForSeconds(300f);
     }
@@ -78,12 +78,12 @@ public class NPCWorkCity : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Detect Townsman
-        Townsman townsman = other.GetComponent<Townsman>();
-        if (townsman != null && !detectedTownsmen.Contains(townsman))
+        // Detect Villager
+        Townsman villager = other.GetComponent<Townsman>();
+        if (villager != null && !detectedVillagers.Contains(villager))
         {
-            detectedTownsmen.Add(townsman);
-            Debug.Log($"Townsman entered: {townsman.name}");
+            detectedVillagers.Add(villager);
+            Debug.Log($"Villager entered: {villager.name}");
         }
 
         // Detect NPCWorkArea
@@ -97,12 +97,12 @@ public class NPCWorkCity : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // Remove Townsman
-        Townsman townsman = other.GetComponent<Townsman>();
-        if (townsman != null && detectedTownsmen.Contains(townsman))
+        // Remove Villager
+        Townsman villager = other.GetComponent<Townsman>();
+        if (villager != null && detectedVillagers.Contains(villager))
         {
-            detectedTownsmen.Remove(townsman);
-            Debug.Log($"Townsman exited: {townsman.name}");
+            detectedVillagers.Remove(villager);
+            Debug.Log($"Villager exited: {villager.name}");
         }
 
         // Remove NPCWorkArea
@@ -114,17 +114,17 @@ public class NPCWorkCity : MonoBehaviour
         }
     }
 
-    private void TryAssignWork(Townsman npc)
+    private void TryAssignWork(Townsman villager)
     {
         foreach (var workArea in detectedWorkAreas)
         {
             if (workArea.hasAWorker == false)
             {
-                npc.Work = workArea;
+                villager.Work = workArea;
                 workArea.hasAWorker = true;
-                workArea.worker = npc.gameObject;
-                wanderingTownsmen.Remove(npc);
-                Debug.Log($"Assigned {npc.name} to {workArea.name}");
+                workArea.worker = villager.gameObject;
+                wanderingVillagers.Remove(villager);
+                Debug.Log($"Assigned {villager.npcName} to {workArea.name}");
                 break;
             }
         }

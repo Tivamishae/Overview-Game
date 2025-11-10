@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 public class Collect : QuestPart
 {
@@ -81,3 +81,4 @@ public class Collect : QuestPart
         }
     }
 }
+*/

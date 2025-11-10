@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 using UnityEngine.AI;
 
 public class DrumCallerTotem : Enemy
@@ -35,7 +35,7 @@ public class DrumCallerTotem : Enemy
     {
         base.Update();
 
-        // Always idle state only – no combat, no wandering
+        // Always idle state only ï¿½ no combat, no wandering
         if (currentState != EnemyState.Idle)
             SetState(EnemyState.Idle);
 
@@ -155,3 +155,4 @@ public class DrumCallerTotem : Enemy
 
     #endregion
 }
+*/

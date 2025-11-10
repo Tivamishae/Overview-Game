@@ -304,9 +304,4 @@ public class QuestSystem : MonoBehaviour
             ShowCurrentQuest();
         }
     }
-
-
-
-
-
 }

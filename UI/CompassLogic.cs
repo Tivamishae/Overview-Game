@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 
 public class CompassLogic : MonoBehaviour
 {
@@ -8,3 +8,5 @@ public class CompassLogic : MonoBehaviour
         compassContainer.SetActive(true);
     }
 }
+
+*/

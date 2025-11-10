@@ -1,4 +1,4 @@
-using UnityEngine;
+/* using UnityEngine;
 using UnityEngine.AI;
 
 public class GuardNPC : InteractableNPC
@@ -61,3 +61,4 @@ public class GuardNPC : InteractableNPC
         FaceTarget(player.transform.position);
     }
 }
+*/

@@ -72,7 +72,7 @@ public class Quest : MonoBehaviour
             RefreshPartsFromChildren();
 
         EnsureParentLinks();
-        // Do NOT activate here — QuestSystem will start it
+        // Do NOT activate here ï¿½ QuestSystem will start it
     }
 
     private void OnValidate()

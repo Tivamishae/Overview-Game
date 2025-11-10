@@ -64,7 +64,7 @@ public class FirstPersonMovement : MonoBehaviour
         speed = PlayerStats.Instance.Speed;
         runSpeed = PlayerStats.Instance.Speed * 1.5f;
 
-        ScreensOpen = !(inventoryOpen || TradingDisplayIsOpen || storageDisplayIsOpen || questScreenIsOpen || mapScreenIsOpen);
+        ScreensOpen = !(inventoryOpen || TradingDisplayIsOpen ||  storageDisplayIsOpen || questScreenIsOpen || mapScreenIsOpen);
 
         if (ScreensOpen)
         {

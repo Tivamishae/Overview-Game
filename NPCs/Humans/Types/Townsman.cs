@@ -45,9 +45,9 @@ public class Townsman : Villager
         }
     }
 
-    public override void ResetEnemy()
+    public override void ResetNPC()
     {
-        base.ResetEnemy();
+        base.ResetNPC();
         Work = null;
     }
 }

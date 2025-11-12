@@ -34,7 +34,7 @@ public class NPC : MonoBehaviour
     [Header("References")]
     public NavMeshAgent agent;
     protected Animator animator;
-    protected Rigidbody rb;
+    public Rigidbody rb;
     public GameObject player;
 
 
@@ -124,6 +124,11 @@ public class NPC : MonoBehaviour
         if (currentState == NPCState.Idle)
             EvaluateAngerTriggers();
 
+        if (attacks.Length > 0 && attacks != null)
+        {
+            UpdateAttackCooldowns();
+        }
+
         HandleState();
         wasDamaged = false;
     }
@@ -140,6 +145,28 @@ public class NPC : MonoBehaviour
                 SetState(NPCState.Angry);
                 break;
             }
+        }
+    }
+
+    public void UpdateAttackCooldowns()
+    {
+        int counter = 0;
+        Attack shortestCooldown = attacks[0];
+        foreach (Attack attack in attacks)
+        {
+            if (attack.cooldownTimer > 0)
+            {
+                attack.cooldownTimer -= Time.deltaTime;
+                counter += 1;
+                if (shortestCooldown.cooldownTimer > attack.cooldownTimer)
+                {
+                    shortestCooldown = attack;
+                }
+            }
+        }
+        if (counter == attacks.Length)
+        {
+            shortestCooldown.AngerReaction?.Invoke(this);
         }
     }
 
@@ -262,6 +289,12 @@ public class NPC : MonoBehaviour
             agent.isStopped = true;
     }
 
+    public virtual void StartMoving()
+    {
+        if (agent != null && agent.enabled)
+            agent.isStopped = false;
+    }
+
     public void PlayBool(string name, bool value)
     {
         if (animator == null) return;
@@ -304,7 +337,7 @@ public class NPC : MonoBehaviour
 
     protected virtual void EnterIdle()
     {
-        StopMoving();
+        StartMoving();
         PlayBool("Running", false);
     }
 
@@ -316,7 +349,6 @@ public class NPC : MonoBehaviour
     protected virtual void EndIdle()
     {
         agent.ResetPath();
-        agent.isStopped = true;
     }
 
     #endregion
@@ -329,41 +361,39 @@ public class NPC : MonoBehaviour
         PlayBool("Walking", false);
 
         PlaySound(angerSound);
-
-        StopMoving();
     }
 
-protected virtual void UpdateAngry()
-{
-    if (!noticesPlayer)
+    protected virtual void UpdateAngry()
     {
-        angerTimer -= Time.deltaTime;
-    }
-    else
-    {
-        angerTimer = angerDuration;
-    }
+        if (!noticesPlayer)
+        {
+            angerTimer -= Time.deltaTime;
+        }
+        else
+        {
+            angerTimer = angerDuration;
+        }
 
-    if (angerTimer <= 0f || player == null)
-    {
-        SetState(NPCState.Idle);
-        return;
-    }
+        if (angerTimer <= 0f || player == null)
+        {
+            SetState(NPCState.Idle);
+            return;
+        }
 
-    if (attacks != null && attacks.Length > 0)
-    {
-        HandleAttacks();
+        if (attacks != null && attacks.Length > 0)
+        {
+            HandleAttacks();
+        }
+        else
+        {
+            AngerReactions.Instance.RunAwayReaction(this);
+        }
     }
-    else
-    {
-        AngerReactions.Instance.RunAwayReaction(this);
-    }
-}
 
 
     protected virtual void EndAngry()
     {
-        StopMoving();
+        EndAllAttacks();
         PlayBool("Running", false);
     }
 
@@ -377,29 +407,37 @@ protected virtual void UpdateAngry()
         wasDamaged = true;
     }
 
-protected virtual void HandleAttacks()
-{
-    if (isAttacking)
-        return;
-
-    if (attacks == null || attacks.Length == 0)
+    protected virtual void HandleAttacks()
     {
-        AngerReactions.Instance.RunAwayReaction(this);
-        return;
-    }
+        if (isAttacking)
+            return;
 
-    Attack attack = attacks[Random.Range(0, attacks.Length)];
+        if (attacks == null || attacks.Length == 0)
+        {
+            AngerReactions.Instance.RunAwayReaction(this);
+            return;
+        }
 
-    if (attack != null)
-    {
-        isAttacking = true;
-        attack.Execute(this);
+        Attack attack = attacks[Random.Range(0, attacks.Length)];
+        if (attack != null && attack.cooldownTimer <= 0)
+        {
+            isAttacking = true;
+            attack.Execute(this);
+        }
     }
-}
 
 
     public void EndAttack()
     {
+        isAttacking = false;
+    }
+
+    public void EndAllAttacks()
+    {
+        foreach (Attack attack in attacks)
+        {
+            attack.StopPerformAttack();
+        }
         isAttacking = false;
     }
 
@@ -499,7 +537,7 @@ protected virtual void HandleAttacks()
 
     protected virtual void EndDead()
     {
-        ResetEnemy();
+        ResetNPC();
         Despawn();
     }
 
@@ -507,7 +545,7 @@ protected virtual void HandleAttacks()
 
     #region Death Helper Functions
 
-    protected virtual void Despawn()
+    public virtual void Despawn()
     {
         if (destroyOnDeath)
         {
@@ -524,7 +562,7 @@ protected virtual void HandleAttacks()
         }
     }
 
-    public virtual void ResetEnemy()
+    public virtual void ResetNPC()
     {
         // Reset stats
         currentHealth = maxHealth;
@@ -619,6 +657,17 @@ protected virtual void HandleAttacks()
     {
         return Physics.Raycast(transform.position + Vector3.up * 0.2f, Vector3.down, 1f, groundLayerMask);
     }
+
+    public void FreezeAllButYRotation(Rigidbody rb)
+    {
+        // Freeze position on X and Z so it can only move vertically
+        // Freeze rotation on X and Z, but keep Y free (so it can face player if needed)
+        rb.constraints = RigidbodyConstraints.FreezePositionX
+                       | RigidbodyConstraints.FreezePositionZ
+                       | RigidbodyConstraints.FreezeRotationX
+                       | RigidbodyConstraints.FreezeRotationZ;
+    }
+
 
     protected virtual void RemoveAllCollidersAndFreezeBody()
     {

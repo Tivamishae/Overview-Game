@@ -117,7 +117,7 @@ public class NightEnemySpawner : MonoBehaviour
                 NPC enemy = enemyObj.GetComponent<NPC>();
 
                 enemy.poolPrefabReference = chosen.prefab;
-                enemy.ResetEnemy(); // make sure it�s ready
+                enemy.ResetNPC(); // make sure it�s ready
 
                 enemyObj.transform.position = spawnPos;
                 enemyObj.transform.rotation = Quaternion.identity;
@@ -219,7 +219,7 @@ public class NightEnemySpawner : MonoBehaviour
 
                         if (enemy.obj.TryGetComponent(out NPC e))
                         {
-                            e.ResetEnemy(); // ensures correct animation/state reset
+                            e.ResetNPC(); // ensures correct animation/state reset
                         }
                     }
                 }

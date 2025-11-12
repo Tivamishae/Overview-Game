@@ -14,13 +14,11 @@ public class WanderIdle : MonoBehaviour, IIdleReaction
         {
             standStillTimer -= Time.deltaTime;
 
-            npc.StopMoving();
             npc.PlayBool("Walking", false);
             npc.PlayBool("Idle", true);
 
             if (standStillTimer <= 0)
             {
-                npc.agent.isStopped = false;
                 npc.SetNewWanderDestination(wanderRadius);
                 isStandingStill = false;
                 npc.PlayBool("Walking", true);

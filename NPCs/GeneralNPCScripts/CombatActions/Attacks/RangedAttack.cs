@@ -16,10 +16,6 @@ public class RangedAttack : Attack
 
     public override void Execute(NPC npc)
     {
-        if (Time.time < nextAttackTime)
-            return;
-
-        nextAttackTime = Time.time + cooldown;
 
         AngerReaction?.Invoke(npc);
         npc.PlayTrigger(animationTrigger);
